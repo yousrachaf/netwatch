@@ -1,0 +1,48 @@
+name: SonarCloud Test
+
+on:
+  workflow_dispatch:
+
+env:
+  PYTHONPATH: ${{ github.workspace }}
+
+jobs:
+  sonar-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov
+
+      - name: Run tests with coverage
+        run: |
+          pytest --cov=netwatch --cov-report=xml
+
+      - name: List generated files (debug)
+        run: |
+          ls -R
+          echo "---- Content of coverage.xml ----"
+          head -n 20 coverage.xml || echo "No coverage.xml found"
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v2
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.organization=yousrachaf
+            -Dsonar.projectKey=yousrachaf
+            -Dsonar.python.coverage.reportPaths=coverage.xml
