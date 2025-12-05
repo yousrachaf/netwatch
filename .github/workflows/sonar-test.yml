@@ -43,6 +43,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.organization=yousrachaf
+            -Dsonar.organization=yousrachaf_netwatch
             -Dsonar.projectKey=yousrachaf
             -Dsonar.python.coverage.reportPaths=coverage.xml
