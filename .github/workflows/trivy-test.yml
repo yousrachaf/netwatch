@@ -2,7 +2,7 @@ name: Trivy Test
 
 on:
   workflow_dispatch:  
-
+  
 jobs:
   trivy-test:
     runs-on: ubuntu-latest
@@ -11,16 +11,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Debug workspace
+        run: |
+          echo "PWD = $(pwd)"
+          echo "Liste des fichiers à la racine :"
+          ls -la
+          echo "Liste récursive :"
+          ls -R
+
       - name: Build Docker image
         run: |
-          docker build -t netwatch-trivy-test:${{ github.sha }} .
-
-      - name: Scan image with Trivy
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: netwatch-trivy-test:${{ github.sha }}
-          vuln-type: 'os,library'
-          severity: 'HIGH,CRITICAL'
-          ignore-unfixed: true
-          format: 'table'
-          exit-code: '0'   
+          docker build -t netwatch-trivy-test:${{ github.sha }} -f Dockerfile .
