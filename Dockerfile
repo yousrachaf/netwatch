@@ -2,10 +2,13 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY pyproject.toml /app/pyproject.toml
+COPY netwatch /app/netwatch
+COPY tests /app/tests
 
-COPY netwatch ./netwatch
+RUN pip install --no-cache-dir -U pip \
+ && pip install --no-cache-dir -e . \
+ && pip install --no-cache-dir pytest
 
 EXPOSE 8000
 

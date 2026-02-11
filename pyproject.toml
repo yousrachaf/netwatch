@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "netwatch"
+version = "0.1.0"
+description = "Network monitoring checks (ping/http/tcp) + API"
+requires-python = ">=3.10"
+dependencies = [
+  "fastapi",
+  "uvicorn[standard]",
+  "pydantic",
+  "requests",
+  "httpx<0.28"
+]
+
+[tool.setuptools]
+packages = ["netwatch"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
